@@ -147,15 +147,13 @@ function add_reservation_to_cart() {
 
     $from = sanitize_text_field($_POST['from']);
     $to = sanitize_text_field($_POST['to']);
-    error_log("Fecha de inicio: $from");
-error_log("Fecha de fin: $to");
     $product_id = intval($_POST['product_id']);
 
     $start_date = new DateTime($from);
     $end_date = new DateTime($to);
     $interval = date_diff($start_date, $end_date);
     $days = $interval->days + 1;
-    // Comprueba si el producto existe y tiene precio
+
     $product = wc_get_product($product_id);
     if (!$product) {
         wp_send_json_error(array('error_message' => 'El producto de reserva no existe.'));
@@ -166,18 +164,21 @@ error_log("Fecha de fin: $to");
         return;
     }
 
-    // Añade un producto al carrito por cada día de la reserva
     global $woocommerce;
-        $added = $woocommerce->cart->add_to_cart($product_id, $days, 0, [], ['from_date' => $from, 'to_date' => $to]);
-        if (!$added) {
-            wp_send_json_error(array('error_message' => 'No se pudo agregar el producto de reserva al carrito.'));
-            return;
-        }
+    // Vacía el carrito antes de agregar el nuevo producto
+    $woocommerce->cart->empty_cart();
+
+    $added = $woocommerce->cart->add_to_cart($product_id, $days, 0, [], ['from_date' => $from, 'to_date' => $to]);
+    if (!$added) {
+        wp_send_json_error(array('error_message' => 'No se pudo agregar el producto de reserva al carrito.'));
+        return;
+    }
 
     wp_send_json_success(array(
         'checkout_url' => wc_get_checkout_url(),
     ));
 }
+
 
 
 
