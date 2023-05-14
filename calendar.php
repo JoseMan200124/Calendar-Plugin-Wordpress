@@ -1,23 +1,46 @@
 <?php
 /*
-Plugin Name: Calendario Plugin
+Plugin Name: Calendario de reservas
 Description: Este es un plugin de calendario.
 Author: Tu nombre
+License: GPLv2 or later
 Version: 1.0
 */
 
 // enqueue scripts and styles for FullCalendar
+if ( !function_exists('is_plugin_active') ) {
+    include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+}
+
+if (!is_plugin_active('woocommerce/woocommerce.php')) {
+    function my_admin_notice() {
+        ?>
+        <script type="text/javascript">
+            alert("<?php _e( 'El plugin Calendario requiere que el plugin WooCommerce esté instalado y activado.', 'calendario-plugin' ); ?>");
+        </script>
+        <?php
+    }
+    add_action( 'wp_footer', 'my_admin_notice' );
+    return; 
+}
+
 function enqueue_fullcalendar(){
     // enqueue all our scripts
+    wp_enqueue_style('my-style', plugins_url('assets/mystyle.css', __FILE__));
+
+    // Encolar el archivo JS
+    wp_enqueue_script('my-script', plugins_url('assets/myscript.js', __FILE__), array('jquery'), '1.0', true);
     wp_enqueue_style('fullcalendar-css', 'https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.css');
+    wp_enqueue_script('my-script', get_template_directory_uri() . '/assets/myscript2.js', array('jquery'), '1.0', true);
+
     wp_enqueue_script('moment-js', 'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js', array('jquery'), null, true);
     wp_enqueue_script('fullcalendar-js', 'https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.js', array('jquery', 'moment-js'), null, true);
     wp_enqueue_script('jquery-ui-dialog');
     wp_enqueue_style('jquery-ui-css', 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css');
     wp_enqueue_script('jquery-ui-datepicker');
 
-     // Localiza el script para proporcionar la URL de admin-ajax.php y el nonce de seguridad
-     wp_localize_script('fullcalendar-js', 'MyAjax', array(
+    // Localiza el script para proporcionar la URL de admin-ajax.php y el nonce de seguridad
+    wp_localize_script('fullcalendar-js', 'MyAjax', array(
         'ajaxurl' => admin_url('admin-ajax.php'),
         'ajax_nonce' => wp_create_nonce('add_reservation_to_cart_nonce')
     ));
@@ -26,7 +49,7 @@ add_action('wp_enqueue_scripts', 'enqueue_fullcalendar');
 
 class Calendar {
     public function show() {
-        return '<div id="calendar"></div><div id="dialog" title="Reservar" style="display:none;"><p>Fecha de inicio: <input type="text" id="from"></p><p>Fecha de fin: <input type="text" id="to"></p><p>Realizar pago...</p></div>';
+        return '<div id="calendar"></div><div id="dialog" title="' . __("Reservar", "calendario-plugin") . '" style="display:none;"><p>' . __("Fecha de inicio:", "calendario-plugin") . ' <input type="text" id="from"></p><p>' . __("Fecha de fin:", "calendario-plugin") . ' <input type="text" id="to"></p><p>' . __("Realizar pago...", "calendario-plugin") . '</p></div>';
     }
 }
 
@@ -60,9 +83,9 @@ function add_calendar_script() {
 
         $("#calendar").fullCalendar({
             header: {
-                left: "prev,next today",
+                left: "prev,next", // today and month buttons removed
                 center: "title",
-                right: "month"
+                right: "" // month button removed
             },
             defaultDate: "'. date('Y-m-d') .'",
             navLinks: false, 
@@ -135,7 +158,8 @@ function add_calendar_script() {
             }
         });
     });
-    </script>';
+    </script>
+   ';
 
 }
 add_action('wp_footer', 'add_calendar_script');

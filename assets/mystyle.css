@@ -1,0 +1,88 @@
+/* Cambia el color de fondo y el color de la letra del header del calendario */
+.fc-header-toolbar {
+    background-color: #333;
+    color: #fff;
+}
+
+/* Cambia el color de los botones del header del calendario */
+.fc-button {
+    background: none!important;
+    border: none!important;
+    box-shadow: none!important;
+}
+
+/* Cambia el color de fondo de los días del calendario */
+.fc-day {
+    background-color: #eee;
+}
+
+/* Cambia el color de los eventos */
+.fc-event {
+    background-color: #f00;
+    color: #fff;
+}
+.fc-icon-right-single-arrow:after{
+    color: #fff;
+}
+.fc-icon-left-single-arrow:after{
+    color: #fff;
+}
+
+/* Estilo para el formulario de diálogo de reserva */
+#dialog-form {
+    font-family: Arial, sans-serif;
+    color: #333;
+}
+
+/* Estilo para los campos del formulario de diálogo de reserva */
+#dialog-form input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-top: 6px;
+    margin-bottom: 16px;
+    resize: vertical;
+}
+
+/* Estilo para las etiquetas del formulario de diálogo de reserva */
+#dialog-form label {
+    padding: 12px 12px 12px 0;
+    display: inline-block;
+}
+
+/* Estilo para el contenedor del formulario de diálogo de reserva */
+#dialog-form fieldset {
+    border: none;
+    padding: 0;
+}
+
+/* Estilo para el botón de enviar del formulario de diálogo de reserva */
+
+.ui-dialog .ui-dialog-buttonpane button{
+    background: #333!important;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    transition-duration: 0.4s;
+}
+.ui-draggable .ui-dialog-titlebar{
+    background: none;
+    border: none;
+}
+.ui-widget .ui-widget {
+    font-size: 3em;
+    background: none;
+    border: none;
+}
+.ui-dialog-buttonpane button:hover {
+    background-color: #333!important;
+    color: white;
+}
